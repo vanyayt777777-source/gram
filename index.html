@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Bot | Реальная оплата</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0b1a2e, #1d3853);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .payment-card {
+            background: #132433;
+            border-radius: 36px;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.7), 0 0 0 1px #2e4b6e inset;
+            max-width: 500px;
+            width: 100%;
+            padding: 30px 25px;
+            color: #eef4fa;
+        }
+
+        .bot-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .bot-avatar {
+            width: 65px;
+            height: 65px;
+            background: #1f4b7a;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            color: #b0dcff;
+            border: 1px solid #3f7eb0;
+        }
+
+        .bot-title h2 {
+            font-weight: 600;
+            font-size: 1.9rem;
+            background: linear-gradient(135deg, #fff, #b4dcff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .bot-title span {
+            background: #203d59;
+            padding: 5px 15px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            color: #aac9f0;
+            border: 1px solid #38668f;
+        }
+
+        .rate-block {
+            background: #0f1f2f;
+            border-radius: 50px;
+            padding: 15px 22px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #2f5172;
+        }
+
+        .rate-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffd966;
+        }
+        .rate-value small { font-size: 1rem; color: #98b9dc; }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-label {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            color: #c3dcff;
+        }
+
+        .amount-box {
+            display: flex;
+            background: #0f1f2d;
+            border: 2px solid #264b6e;
+            border-radius: 40px;
+            padding: 5px 5px 5px 25px;
+        }
+
+        .amount-box input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 18px 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: white;
+            outline: none;
+        }
+
+        .amount-box input:focus {
+            border-color: #4f9eff;
+        }
+
+        .amount-box span {
+            font-size: 1.5rem;
+            margin-right: 20px;
+            color: #98c1ff;
+        }
+
+        .total-row {
+            background: #0c1a27;
+            padding: 18px 22px;
+            border-radius: 40px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid #31597e;
+            font-size: 1.2rem;
+        }
+
+        .total-usdt {
+            color: #3ccf91;
+            font-weight: 700;
+            font-size: 1.6rem;
+        }
+
+        .pay-button {
+            width: 100%;
+            background: linear-gradient(95deg, #2e9aff, #1c6ec9);
+            border: none;
+            padding: 22px;
+            border-radius: 60px;
+            color: white;
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            cursor: pointer;
+            border: 1px solid #7cb3ff;
+            box-shadow: 0 15px 25px #0b2641;
+            transition: 0.15s;
+        }
+
+        .pay-button:hover:not(:disabled) {
+            transform: scale(1.01);
+            background: linear-gradient(95deg, #3fa3ff, #2b7edb);
+        }
+
+        .pay-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .invoice-status {
+            margin-top: 20px;
+            background: #1c3348;
+            border-radius: 40px;
+            padding: 18px 22px;
+            border: 1px solid #3d6388;
+            word-break: break-word;
+            transition: 0.2s;
+        }
+
+        .invoice-status.success {
+            border-color: #3ccf91;
+            background: #1a3a4a;
+        }
+
+        .invoice-status.error {
+            border-color: #ff6b6b;
+            background: #3a2a2a;
+        }
+
+        .warning-note {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            background: #0f212f;
+            padding: 12px 18px;
+            border-radius: 40px;
+            color: #b0cbe9;
+            border: 1px solid #2f5172;
+        }
+
+        a { 
+            color: #ffd966; 
+            text-decoration: none; 
+            font-weight: 600; 
+        }
+        
+        a:hover { 
+            text-decoration: underline; 
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease infinite;
+        }
+
+        @keyframes spin { 
+            to { transform: rotate(360deg); } 
+        }
+
+        .pay-url {
+            display: inline-block;
+            background: #2d4b6e;
+            padding: 8px 15px;
+            border-radius: 30px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            border: 1px solid #4f8bc9;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-card">
+        <div class="bot-header">
+            <div class="bot-avatar"><i class="fas fa-robot"></i></div>
+            <div class="bot-title">
+                <h2>Crypto Bot</h2>
+                <span><i class="fas fa-key"></i> API: 452163</span>
+            </div>
+        </div>
+
+        <div class="rate-block">
+            <span><i class="fas fa-chart-line"></i> Курс USDT/RUB</span>
+            <span class="rate-value">1 USDT <small>=</small> 90 ₽</span>
+        </div>
+
+        <div class="input-group">
+            <div class="input-label"><i class="fas fa-ruble-sign"></i> Сумма в RUB</div>
+            <div class="amount-box">
+                <input type="number" id="rubAmount" value="900" min="9" step="1" placeholder="Введите сумму">
+                <span>₽</span>
+            </div>
+            <small style="color: #8aa9cc; margin-left: 15px;">Минимум: 9 ₽ (0.1 USDT)</small>
+        </div>
+
+        <div class="total-row">
+            <span>К оплате (USDT)</span>
+            <span class="total-usdt" id="totalUSDT">10.00</span>
+        </div>
+
+        <button class="pay-button" id="payButton">
+            <i class="fab fa-bitcoin"></i> Оплатить
+        </button>
+
+        <div class="invoice-status" id="invoiceBox">
+            <i class="fas fa-info-circle"></i>
+            <span id="invoiceMessage">Введите сумму и нажмите "Оплатить"</span>
+        </div>
+
+        <div class="warning-note">
+            <i class="fas fa-check-circle" style="color: #3ccf91;"></i>
+            ✅ Реальная оплата через Crypto Bot. Работает через серверный прокси.
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const rubInput = document.getElementById('rubAmount');
+            const totalSpan = document.getElementById('totalUSDT');
+            const payButton = document.getElementById('payButton');
+            const invoiceMessage = document.getElementById('invoiceMessage');
+            const invoiceBox = document.getElementById('invoiceBox');
+            const USDT_RATE = 90;
+
+            function updateTotal() {
+                let rub = parseFloat(rubInput.value) || 0;
+                if (rub < 0) rub = 0;
+                totalSpan.textContent = (rub / USDT_RATE).toFixed(2);
+            }
+            
+            rubInput.addEventListener('input', updateTotal);
+            updateTotal();
+
+            payButton.addEventListener('click', async function() {
+                const rub = parseFloat(rubInput.value);
+                
+                if (!rub || rub < 9) {
+                    showMessage('❌ Минимальная сумма: 9 RUB (0.1 USDT)', 'error');
+                    return;
+                }
+
+                // Блокируем кнопку
+                payButton.disabled = true;
+                const originalText = payButton.innerHTML;
+                payButton.innerHTML = '<span class="loader"></span> Создание счёта...';
+
+                showMessage('⏳ Отправка запроса...', 'info');
+
+                try {
+                    // Отправляем запрос на наш PHP-прокси
+                    const response = await fetch('create-invoice.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            amount: rub
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok || !data.success) {
+                        throw new Error(data.error || `Ошибка ${response.status}`);
+                    }
+
+                    // Успех - показываем ссылку на оплату
+                    showMessage(
+                        `✅ Счёт создан!<br>
+                        <div class="pay-url">
+                            <a href="${data.pay_url}" target="_blank">🔗 Перейти к оплате</a>
+                        </div>
+                        <small>ID: ${data.invoice_id} | Сумма: ${data.amount_usdt} USDT</small>`,
+                        'success'
+                    );
+                    
+                    // Открываем ссылку в новой вкладке
+                    window.open(data.pay_url, '_blank');
+
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                    showMessage(`❌ Ошибка: ${error.message}`, 'error');
+                } finally {
+                    payButton.disabled = false;
+                    payButton.innerHTML = originalText;
+                }
+            });
+
+            function showMessage(text, type = 'info') {
+                invoiceMessage.innerHTML = text;
+                invoiceBox.className = 'invoice-status ' + (type === 'error' ? 'error' : (type === 'success' ? 'success' : ''));
+            }
+        })();
+    </script>
+</body>
+</html>
