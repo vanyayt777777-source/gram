@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Monkey · Форум и репозитории</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Хедер (демо-состояние: авторизован) -->
+    <header class="header">
+        <div class="container header-container">
+            <div class="logo">
+                <a href="index.html">Dev Monkey</a>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html" class="active">Форум</a></li>
+                    <li><a href="index.html?tab=repos">Репозитории</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <!-- Авторизованное состояние (демо) -->
+                <div class="user-profile">
+                    <img src="https://i.pravatar.cc/32?u=monkey" alt="avatar" class="avatar">
+                    <span class="username">alice_dev</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content container">
+        <!-- Поисковая строка -->
+        <div class="search-bar">
+            <input type="text" placeholder="Поиск по заголовкам или репозиториям...">
+            <button class="btn btn-primary"><i class="fas fa-search"></i> Найти</button>
+        </div>
+
+        <!-- Вкладки навигации -->
+        <div class="tabs">
+            <button class="tab active" data-tab="forum">Темы форума</button>
+            <button class="tab" data-tab="repos">Репозитории</button>
+        </div>
+
+        <!-- Секция "Последние темы форума" (будет видна по умолчанию) -->
+        <section id="forum-topics" class="content-section active-section">
+            <div class="section-header">
+                <h2>Последние темы форума</h2>
+                <a href="#" class="btn btn-primary"><i class="fas fa-plus"></i> Новая тема</a>
+            </div>
+            <div class="cards-grid topics-grid">
+                <!-- Карточка темы 1 -->
+                <div class="card topic-card">
+                    <h3><a href="topic.html">React хуки: использование useMemo и useCallback</a></h3>
+                    <p class="excerpt">Обсуждение оптимизации производительности в функциональных компонентах...</p>
+                    <div class="meta">
+                        <span class="author"><i class="fas fa-user"></i> john_doe</span>
+                        <span class="date"><i class="far fa-calendar"></i> 15 фев 2026</span>
+                        <span class="replies"><i class="far fa-comment"></i> 12 ответов</span>
+                    </div>
+                </div>
+                <!-- Карточка темы 2 -->
+                <div class="card topic-card">
+                    <h3><a href="topic.html">Python: асинхронное программирование с asyncio</a></h3>
+                    <p class="excerpt">Проблемы с event loop и как правильно структурировать корутины...</p>
+                    <div class="meta">
+                        <span class="author"><i class="fas fa-user"></i> pythonista</span>
+                        <span class="date"><i class="far fa-calendar"></i> 14 фев 2026</span>
+                        <span class="replies"><i class="far fa-comment"></i> 8 ответов</span>
+                    </div>
+                </div>
+                <!-- Карточка темы 3 -->
+                <div class="card topic-card">
+                    <h3><a href="topic.html">CSS Grid или Flexbox: что выбрать?</a></h3>
+                    <p class="excerpt">Сравнение подходов для создания сложных интерфейсов...</p>
+                    <div class="meta">
+                        <span class="author"><i class="fas fa-user"></i> css_guru</span>
+                        <span class="date"><i class="far fa-calendar"></i> 13 фев 2026</span>
+                        <span class="replies"><i class="far fa-comment"></i> 24 ответа</span>
+                    </div>
+                </div>
+                <!-- Карточка темы 4 -->
+                <div class="card topic-card">
+                    <h3><a href="topic.html">Как работает виртуальная машина JavaScript?</a></h3>
+                    <p class="excerpt">Глубокое погружение в V8 и оптимизации JIT...</p>
+                    <div class="meta">
+                        <span class="author"><i class="fas fa-user"></i> js_wizard</span>
+                        <span class="date"><i class="far fa-calendar"></i> 12 фев 2026</span>
+                        <span class="replies"><i class="far fa-comment"></i> 5 ответов</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция "Популярные репозитории" (скрыта по умолчанию) -->
+        <section id="popular-repos" class="content-section">
+            <div class="section-header">
+                <h2>Популярные репозитории</h2>
+                <a href="#" class="btn btn-primary"><i class="fas fa-plus"></i> Создать репозиторий</a>
+            </div>
+            <div class="cards-grid repos-grid">
+                <!-- Карточка репозитория 1 -->
+                <div class="card repo-card">
+                    <h3><a href="repository.html">react-hooks</a></h3>
+                    <p class="repo-description">Кастомные хуки и лучшие практики использования</p>
+                    <div class="repo-details">
+                        <span class="lang"><span class="lang-dot" style="background: #61DAFB;"></span> JavaScript</span>
+                        <span class="stars"><i class="far fa-star"></i> 1.2k</span>
+                        <span class="forks"><i class="fas fa-code-branch"></i> 342</span>
+                    </div>
+                    <div class="meta author">by <a href="#">facebook</a></div>
+                </div>
+                <!-- Карточка репозитория 2 -->
+                <div class="card repo-card">
+                    <h3><a href="repository.html">python-scripts</a></h3>
+                    <p class="repo-description">Полезные скрипты для автоматизации и анализа данных</p>
+                    <div class="repo-details">
+                        <span class="lang"><span class="lang-dot" style="background: #3572A5;"></span> Python</span>
+                        <span class="stars"><i class="far fa-star"></i> 4.5k</span>
+                        <span class="forks"><i class="fas fa-code-branch"></i> 1.1k</span>
+                    </div>
+                    <div class="meta author">by <a href="#">pythondev</a></div>
+                </div>
+                <!-- Карточка репозитория 3 -->
+                <div class="card repo-card">
+                    <h3><a href="repository.html">dev-monkey-forum</a></h3>
+                    <p class="repo-description">Исходный код этого форума и системы репозиториев</p>
+                    <div class="repo-details">
+                        <span class="lang"><span class="lang-dot" style="background: #e34c26;"></span> HTML</span>
+                        <span class="stars"><i class="far fa-star"></i> 230</span>
+                        <span class="forks"><i class="fas fa-code-branch"></i> 45</span>
+                    </div>
+                    <div class="meta author">by <a href="#">devmonkey</a></div>
+                </div>
+                <!-- Карточка репозитория 4 -->
+                <div class="card repo-card">
+                    <h3><a href="repository.html">go-microservices</a></h3>
+                    <p class="repo-description">Шаблон для микросервисов на Go с Docker и Kubernetes</p>
+                    <div class="repo-details">
+                        <span class="lang"><span class="lang-dot" style="background: #00ADD8;"></span> Go</span>
+                        <span class="stars"><i class="far fa-star"></i> 890</span>
+                        <span class="forks"><i class="fas fa-code-branch"></i> 120</span>
+                    </div>
+                    <div class="meta author">by <a href="#">gopher</a></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Dev Monkey. Сообщество разработчиков.</p>
+        </div>
+    </footer>
+
+    <!-- Простейший переключатель вкладок (без JS, только демо-маркер. В реальности нужен JS) -->
+    <!-- Для чистоты статики, вкладки просто показаны обе, но активна по умолчанию "Темы форума". Вторую секцию скрываем через CSS. -->
+</body>
+</html>
