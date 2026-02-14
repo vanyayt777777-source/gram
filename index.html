@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Monkey · Форум и репозитории</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FDB813;
+            --primary-dark: #e6a800;
+            --bg: #FFFFFF;
+            --bg-secondary: #FFF9E6;
+            --text: #24292e;
+            --text-light: #57606a;
+            --border: #e1e4e8;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --hover-shadow: 0 6px 16px rgba(253, 184, 19, 0.2);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        /* Хедер */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 3px solid var(--primary);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            padding-bottom: 5px;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav a:hover, .nav a.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Кнопки */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .btn-github {
+            background: #24292e;
+            color: white;
+            border: none;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .btn-github:hover {
+            background: #2c974b;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        /* Поиск */
+        .search-bar {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(253, 184, 19, 0.1);
+        }
+
+        /* Вкладки */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .tab:hover {
+            color: var(--primary);
+        }
+
+        .tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--text);
+        }
+
+        /* Карточки */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+            border-color: var(--primary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 30px;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* Формы */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .form-check input {
+            width: auto;
+        }
+
+        /* Страницы */
+        .page {
+            display: none;
+        }
+
+        .page.active-page {
+            display: block;
+        }
+
+        .auth-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 200px);
+            padding: 40px 0;
+        }
+
+        .auth-box {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .auth-box h2 {
+            margin-bottom: 30px;
+            text-align: center;
+            color: var(--primary);
+            font-size: 2rem;
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--text-light);
+        }
+
+        .auth-links a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .social-login {
+            margin-top: 30px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            padding-top: 25px;
+        }
+
+        .create-topic-form {
+            max-width: 800px;
+            margin: 30px auto;
+            background: var(--bg-secondary);
+            padding: 40px;
+            border-radius: 16px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .create-topic-form h1 {
+            margin-bottom: 30px;
+        }
+
+        .filters-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 10px 20px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: white;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        .repo-details {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .lang-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 25px 0;
+            margin-top: auto;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            .nav ul {
+                gap: 20px;
+                justify-content: center;
+            }
+            .user-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .auth-box {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Хедер (один для всех страниц) -->
+    <header class="header">
+        <div class="container header-container">
+            <div class="logo">
+                <a href="#" onclick="showPage('home')">🐒 Dev Monkey</a>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a onclick="showPage('home')" class="nav-link" id="nav-home">Форум</a></li>
+                    <li><a onclick="showPage('repos')" class="nav-link" id="nav-repos">Репозитории</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions" id="userActions">
+                <a onclick="showPage('login')" class="btn btn-outline">Войти</a>
+                <a onclick="showPage('register')" class="btn btn-primary">Регистрация</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content container">
+        <!-- Главная страница -->
+        <div id="home-page" class="page active-page">
+            <div class="search-bar">
+                <input type="text" id="homeSearch" placeholder="Поиск по заголовкам или репозиториям...">
+                <button class="btn btn-primary" onclick="search()"><i class="fas fa-search"></i> Найти</button>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="showForumTopics()">Темы форума</button>
+                <button class="tab" onclick="window.location.href='#'; showPage('repos')">Репозитории</button>
+            </div>
+
+            <section id="forumTopics">
+                <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>Последние темы форума</h2>
+                    <a onclick="showPage('create-topic')" class="btn btn-primary"><i class="fas fa-plus"></i> Новая тема</a>
+                </div>
+                <div class="cards-grid" id="topicsGrid">
+                    <div class="card empty-state">
+                        <i class="fas fa-comments"></i>
+                        <h3>Форум пуст</h3>
+                        <p>Создайте первую тему, чтобы начать обсуждение</p>
+                        <a onclick="showPage('create-topic')" class="btn btn-primary" style="margin-top: 20px;">Создать тему</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Страница репозиториев -->
+        <div id="repos-page" class="page">
+            <div class="search-bar">
+                <input type="text" id="repoSearch" placeholder="Поиск репозиториев...">
+                <button class="btn btn-primary" onclick="searchRepos()"><i class="fas fa-search"></i> Найти</button>
+            </div>
+
+            <div class="filters-bar">
+                <select id="languageFilter" class="filter-select" onchange="filterRepos()">
+                    <option value="">Все языки</option>
+                    <option value="JavaScript">JavaScript</option>
+                    <option value="Python">Python</option>
+                    <option value="Go">Go</option>
+                    <option value="HTML">HTML</option>
+                </select>
+                
+                <select id="sortFilter" class="filter-select" onchange="sortRepos()">
+                    <option value="stars">По звездам</option>
+                    <option value="forks">По форкам</option>
+                    <option value="name">По имени</option>
+                </select>
+            </div>
+
+            <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>Популярные репозитории</h2>
+                <a onclick="createRepo()" class="btn btn-primary"><i class="fas fa-plus"></i> Создать репозиторий</a>
+            </div>
+
+            <div class="cards-grid" id="reposGrid"></div>
+        </div>
+
+        <!-- Страница создания темы -->
+        <div id="create-topic-page" class="page">
+            <div class="create-topic-form">
+                <h1>Создать новую тему</h1>
+                
+                <form id="topicForm" onsubmit="createTopic(event)">
+                    <div class="form-group">
+                        <label for="title">Заголовок темы</label>
+                        <input type="text" id="title" required placeholder="Например: Проблема с React хуками">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Категория</label>
+                        <select id="category" required>
+                            <option value="">Выберите категорию</option>
+                            <option value="react">React</option>
+                            <option value="python">Python</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="go">Go</option>
+                            <option value="other">Другое</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="content">Содержание</label>
+                        <textarea id="content" rows="10" required placeholder="Опишите вашу проблему или идею..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="linkRepo" onchange="toggleRepoSelector()"> Связать с репозиторием
+                        </label>
+                    </div>
+
+                    <div id="repoSelector" style="display: none; margin-bottom: 20px;">
+                        <select class="form-group">
+                            <option>react-hooks</option>
+                            <option>python-scripts</option>
+                            <option>dev-monkey-forum</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Опубликовать тему</button>
+                    <a onclick="showPage('home')" class="btn btn-outline" style="margin-left: 10px;">Отмена</a>
+                </form>
+            </div>
+        </div>
+
+        <!-- Страница входа -->
+        <div id="login-page" class="page auth-page">
+            <div class="auth-box">
+                <h2>Вход в Dev Monkey</h2>
+                <form onsubmit="login(event)">
+                    <div class="form-group">
+                        <label for="login-username">Email или имя пользователя</label>
+                        <input type="text" id="login-username" required placeholder="example@mail.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login-password">Пароль</label>
+                        <input type="password" id="login-password" required placeholder="········">
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" id="remember">
+                        <label for="remember">Запомнить меня</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Войти</button>
+                    
+                    <div class="auth-links">
+                        <a href="#">Забыли пароль?</a> · <a onclick="showPage('register')">Создать аккаунт</a>
+                    </div>
+                </form>
+
+                <div class="social-login">
+                    <p>Или войдите через:</p>
+                    <button class="btn btn-github" onclick="githubLogin()">
+                        <i class="fab fa-github"></i> GitHub
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница регистрации -->
+        <div id="register-page" class="page auth-page">
+            <div class="auth-box">
+                <h2>Регистрация</h2>
+                <form onsubmit="register(event)">
+                    <div class="form-group">
+                        <label for="reg-username">Имя пользователя</label>
+                        <input type="text" id="reg-username" required placeholder="alice_dev">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-email">Email</label>
+                        <input type="email" id="reg-email" required placeholder="alice@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-password">Пароль</label>
+                        <input type="password" id="reg-password" required placeholder="минимум 8 символов">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-confirm">Подтверждение пароля</label>
+                        <input type="password" id="reg-confirm" required placeholder="········">
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">Я принимаю <a href="#">условия использования</a></label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Зарегистрироваться</button>
+                    
+                    <div class="auth-links">
+                        Уже есть аккаунт? <a onclick="showPage('login')">Войти</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Dev Monkey. Сообщество разработчиков.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Данные для репозиториев
+        const repos = [
+            {name: 'react-hooks', desc: 'Кастомные хуки для React', lang: 'JavaScript', stars: 1200, forks: 342, author: 'facebook'},
+            {name: 'python-scripts', desc: 'Полезные скрипты для автоматизации', lang: 'Python', stars: 4500, forks: 1100, author: 'pythondev'},
+            {name: 'dev-monkey-forum', desc: 'Исходный код форума', lang: 'HTML', stars: 230, forks: 45, author: 'devmonkey'},
+            {name: 'go-microservices', desc: 'Шаблон микросервисов на Go', lang: 'Go', stars: 890, forks: 120, author: 'gopher'}
+        ];
+
+        let currentRepos = [...repos];
+
+        // Навигация между страницами
+        function showPage(pageId) {
+            // Скрыть все страницы
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active-page');
+            });
+            
+            // Показать выбранную страницу
+            document.getElementById(pageId + '-page').classList.add('active-page');
+            
+            // Обновить активный пункт меню
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            if(pageId === 'home') {
+                document.getElementById('nav-home').classList.add('active');
+            } else if(pageId === 'repos') {
+                document.getElementById('nav-repos').classList.add('active');
+                displayRepos(currentRepos);
+            }
+            
+            // Прокрутка вверх
+            window.scrollTo(0, 0);
+        }
+
+        // Поиск на главной
+        function search() {
+            let query = document.getElementById('homeSearch').value;
+            if(query.trim() !== '') {
+                alert('Поиск: "' + query + '"\n\nФункция поиска будет доступна в следующем обновлении!');
+            } else {
+                alert('Введите текст для поиска');
+            }
+        }
+
+        // Переключение селектора репозитория
+        function toggleRepoSelector() {
+            const checkbox = document.getElementById('linkRepo');
+            document.getElementById('repoSelector').style.display = checkbox.checked ? 'block' : 'none';
+        }
+
+        // Создание темы
+        function createTopic(event) {
+            event.preventDefault();
+            const title = document.getElementById('title').value;
+            alert('Тема "' + title + '" создана!\n\nВ реальном проекте вы будете перенаправлены на страницу темы.');
+            showPage('home');
+        }
+
+        // Вход
+        function login(event) {
+            event.preventDefault();
+            const username = document.getElementById('login-username').value;
+            alert('Добро пожаловать, ' + username + '!');
+            showPage('home');
+        }
+
+        // Регистрация
+        function register(event) {
+            event.preventDefault();
+            const username = document.getElementById('reg-username').value;
+            const password = document.getElementById('reg-password').value;
+            const confirm = document.getElementById('reg-confirm').value;
+            const terms = document.getElementById('terms').checked;
+
+            if(!terms) {
+                alert('Необходимо принять условия использования');
+                return;
+            }
+
+            if(password !== confirm) {
+                alert('Пароли не совпадают');
+                return;
+            }
+
+            if(password.length < 8) {
+                alert('Пароль должен содержать минимум 8 символов');
+                return;
+            }
+
+            alert('Регистрация успешна, ' + username + '!\n\nТеперь вы можете войти.');
+            showPage('login');
+        }
+
+        // GitHub вход
+        function githubLogin() {
+            alert('Вход через GitHub (демо-режим)');
+            showPage('home');
+        }
+
+        // Создание репозитория
+        function createRepo() {
+            alert('Функция создания репозитория\n\nЗаполните форму: название, описание, тип (публичный/приватный)');
+        }
+
+        // Отображение репозиториев
+        function displayRepos(reposToShow) {
+            const grid = document.getElementById('reposGrid');
+            
+            if(reposToShow.length === 0) {
+                grid.innerHTML = `
+                    <div class="card empty-state">
+                        <i class="fas fa-code-branch"></i>
+                        <h3>Репозитории не найдены</h3>
+                        <p>Создайте первый репозиторий</p>
+                        <button class="btn btn-primary" onclick="createRepo()">Создать</button>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = reposToShow.map(repo => {
+                const langColor = {
+                    'JavaScript': '#f1e05a',
+                    'Python': '#3572A5',
+                    'HTML': '#e34c26',
+                    'Go': '#00ADD8'
+                }[repo.lang] || '#FDB813';
+
+                return `
+                    <div class="card repo-card" onclick="openRepo('${repo.name}')">
+                        <h3>${repo.name}</h3>
+                        <p class="repo-description">${repo.desc}</p>
+                        <div class="repo-details">
+                            <span class="lang"><span class="lang-dot" style="background: ${langColor};"></span> ${repo.lang}</span>
+                            <span class="stars"><i class="far fa-star"></i> ${repo.stars}</span>
+                            <span class="forks"><i class="fas fa-code-branch"></i> ${repo.forks}</span>
+                        </div>
+                        <div class="meta">by ${repo.author}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Поиск по репозиториям
+        function searchRepos() {
+            const query = document.getElementById('repoSearch').value.toLowerCase();
+            currentRepos = repos.filter(repo => 
+                repo.name.toLowerCase().includes(query) || 
+                repo.desc.toLowerCase().includes(query)
+            );
+            displayRepos(currentRepos);
+        }
+
+        // Фильтрация репозиториев
+        function filterRepos() {
+            const lang = document.getElementById('languageFilter').value;
+            if(lang === '') {
+                currentRepos = [...repos];
+            } else {
+                currentRepos = repos.filter(repo => repo.lang === lang);
+            }
+            displayRepos(currentRepos);
+        }
+
+        // Сортировка репозиториев
+        function sortRepos() {
+            const sortBy = document.getElementById('sortFilter').value;
+            currentRepos.sort((a, b) => {
+                if(sortBy === 'stars') return b.stars - a.stars;
+                if(sortBy === 'forks') return b.forks - a.forks;
+                if(sortBy === 'name') return a.name.localeCompare(b.name);
+            });
+            displayRepos(currentRepos);
+        }
+
+        // Открыть репозиторий
+        function openRepo(name) {
+            alert(`Репозиторий: ${name}\n\nЗдесь будет страница с кодом, issues и дискуссиями`);
+        }
+
+        // Показать темы форума
+        function showForumTopics() {
+            // Заглушка
+        }
+
+        // Инициализация
+        displayRepos(repos);
+    </script>
+</body>
+</html>
