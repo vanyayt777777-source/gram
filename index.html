@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Bot | Реальная оплата</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0b1a2e, #1d3853);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .payment-card {
+            background: #132433;
+            border-radius: 36px;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.7), 0 0 0 1px #2e4b6e inset;
+            max-width: 500px;
+            width: 100%;
+            padding: 30px 25px;
+            color: #eef4fa;
+        }
+
+        .bot-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .bot-avatar {
+            width: 65px;
+            height: 65px;
+            background: #1f4b7a;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            color: #b0dcff;
+            border: 1px solid #3f7eb0;
+        }
+
+        .bot-title h2 {
+            font-weight: 600;
+            font-size: 1.9rem;
+            background: linear-gradient(135deg, #fff, #b4dcff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .bot-title span {
+            background: #203d59;
+            padding: 5px 15px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            color: #aac9f0;
+            border: 1px solid #38668f;
+        }
+
+        .rate-block {
+            background: #0f1f2f;
+            border-radius: 50px;
+            padding: 15px 22px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #2f5172;
+        }
+
+        .rate-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffd966;
+        }
+        .rate-value small { font-size: 1rem; color: #98b9dc; }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-label {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            color: #c3dcff;
+        }
+
+        .amount-box {
+            display: flex;
+            background: #0f1f2d;
+            border: 2px solid #264b6e;
+            border-radius: 40px;
+            padding: 5px 5px 5px 25px;
+        }
+
+        .amount-box input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 18px 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: white;
+            outline: none;
+        }
+
+        .amount-box span {
+            font-size: 1.5rem;
+            margin-right: 20px;
+            color: #98c1ff;
+        }
+
+        .total-row {
+            background: #0c1a27;
+            padding: 18px 22px;
+            border-radius: 40px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid #31597e;
+            font-size: 1.2rem;
+        }
+
+        .total-usdt {
+            color: #3ccf91;
+            font-weight: 700;
+            font-size: 1.6rem;
+        }
+
+        .pay-button {
+            width: 100%;
+            background: linear-gradient(95deg, #2e9aff, #1c6ec9);
+            border: none;
+            padding: 22px;
+            border-radius: 60px;
+            color: white;
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            cursor: pointer;
+            border: 1px solid #7cb3ff;
+            box-shadow: 0 15px 25px #0b2641;
+            transition: 0.15s;
+        }
+
+        .pay-button:hover:not(:disabled) {
+            transform: scale(1.01);
+            background: linear-gradient(95deg, #3fa3ff, #2b7edb);
+        }
+
+        .pay-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .invoice-status {
+            margin-top: 20px;
+            background: #1c3348;
+            border-radius: 40px;
+            padding: 18px 22px;
+            border: 1px solid #3d6388;
+            word-break: break-word;
+        }
+
+        .warning-note {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            background: #0f212f;
+            padding: 12px 18px;
+            border-radius: 40px;
+            color: #b0cbe9;
+            border: 1px solid #2f5172;
+        }
+
+        a { color: #ffd966; text-decoration: none; font-weight: 600; }
+        a:hover { text-decoration: underline; }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="payment-card">
+        <div class="bot-header">
+            <div class="bot-avatar"><i class="fas fa-robot"></i></div>
+            <div class="bot-title">
+                <h2>Crypto Bot</h2>
+                <span><i class="fas fa-key"></i> API: 452163</span>
+            </div>
+        </div>
+
+        <div class="rate-block">
+            <span><i class="fas fa-chart-line"></i> Курс USDT/RUB</span>
+            <span class="rate-value">1 USDT <small>=</small> 90 ₽</span>
+        </div>
+
+        <div class="input-group">
+            <div class="input-label"><i class="fas fa-ruble-sign"></i> Сумма в RUB</div>
+            <div class="amount-box">
+                <input type="number" id="rubAmount" value="900" min="1" step="1" placeholder="0">
+                <span>₽</span>
+            </div>
+        </div>
+
+        <div class="total-row">
+            <span>К оплате (USDT)</span>
+            <span class="total-usdt" id="totalUSDT">10.00</span>
+        </div>
+
+        <button class="pay-button" id="payButton">
+            <i class="fab fa-bitcoin"></i> Оплатить
+        </button>
+
+        <div class="invoice-status" id="invoiceBox">
+            <i class="fas fa-info-circle"></i>
+            <span id="invoiceMessage">Готов к приёму платежей</span>
+        </div>
+
+        <div class="warning-note">
+            <i class="fas fa-exclamation-triangle" style="color: #ffb342;"></i>
+            ⚡ Реальная интеграция с Crypto Bot API. После оплаты товар/услуга будут предоставлены автоматически.
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const API_TOKEN = '452163:AAGTBJKe7YvufexfRN78tFhnTdGywQyUMSX';
+            const USDT_RATE = 90;
+
+            const rubInput = document.getElementById('rubAmount');
+            const totalSpan = document.getElementById('totalUSDT');
+            const payButton = document.getElementById('payButton');
+            const invoiceMessage = document.getElementById('invoiceMessage');
+            const invoiceBox = document.getElementById('invoiceBox');
+
+            function updateTotal() {
+                let rub = parseFloat(rubInput.value) || 0;
+                if (rub < 0) rub = 0;
+                totalSpan.textContent = (rub / USDT_RATE).toFixed(2);
+            }
+            rubInput.addEventListener('input', updateTotal);
+            updateTotal();
+
+            payButton.addEventListener('click', async function() {
+                const rub = parseFloat(rubInput.value);
+                if (!rub || rub < 9) { // минимум 0.1 USDT = 9 руб
+                    invoiceMessage.innerHTML = '❌ Минимальная сумма: 9 RUB (0.1 USDT)';
+                    invoiceBox.style.borderColor = '#ff6b6b';
+                    return;
+                }
+
+                const usdtAmount = (rub / USDT_RATE).toFixed(2);
+
+                // Блокируем кнопку
+                payButton.disabled = true;
+                const originalText = payButton.innerHTML;
+                payButton.innerHTML = '<span class="loader"></span> Создание счёта...';
+
+                invoiceMessage.innerHTML = '⏳ Отправка запроса в Crypto Bot...';
+                invoiceBox.style.borderColor = '#3f8eff';
+
+                try {
+                    // РЕАЛЬНЫЙ ЗАПРОС К CRYPTO BOT API
+                    const response = await fetch('https://pay.crypt.bot/api/createInvoice', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Crypto-Pay-API-Token': API_TOKEN
+                        },
+                        body: JSON.stringify({
+                            asset: 'USDT',
+                            amount: usdtAmount,
+                            description: `Оплата на сумму ${rub} RUB`,
+                            paid_btn_name: 'openBot',
+                            paid_btn_url: 'https://t.me/CryptoTestBot',
+                            currency_type: 'crypto'
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.error?.message || `Ошибка ${response.status}`);
+                    }
+
+                    if (data.ok && data.result?.pay_url) {
+                        // УСПЕХ - показываем ссылку на реальный счёт
+                        invoiceMessage.innerHTML = `✅ Счёт создан! <a href="${data.result.pay_url}" target="_blank">🔗 Перейти к оплате</a><br><small>ID: ${data.result.invoice_id}</small>`;
+                        invoiceBox.style.borderColor = '#3ccf91';
+
+                        // Дополнительно открываем ссылку в новой вкладке (опционально)
+                        window.open(data.result.pay_url, '_blank');
+                    } else {
+                        throw new Error('Неверный ответ от API');
+                    }
+
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                    invoiceMessage.innerHTML = `❌ Ошибка: ${error.message}<br><small>Проверьте консоль (F12)</small>`;
+                    invoiceBox.style.borderColor = '#ff6b6b';
+                } finally {
+                    payButton.disabled = false;
+                    payButton.innerHTML = originalText;
+                }
+            });
+
+            // Предупреждение о CORS (но для GET можно использовать, для POST с токеном - работает с их API)
+            console.log('Реальная интеграция Crypto Bot API активна');
+        })();
+    </script>
+</body>
+</html>
