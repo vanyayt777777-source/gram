@@ -1,8 +1,0 @@
-# requirements.txt для сайта UserBox Manager
-
-flask==2.3.3
-flask-cors==4.0.0
-pyrogram==2.0.106
-python-dotenv==1.0.0
-aiohttp==3.9.1
-asyncio==3.4.3
